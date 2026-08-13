@@ -10,8 +10,9 @@
 #   users  workshop1 .. workshop5           - one per participant, with access keys
 #
 # Everything is tagged purpose=whisper-workshop so teardown.sh can find it.
-# Credentials are written to ./credentials-OUT.txt which is gitignored. Hand them
-# out over something private, not Slack-in-a-public-channel.
+# Credentials are written OUTSIDE this repo, to ~/whisper-workshop-credentials.txt
+# with 0600 perms. This repo goes to GitHub - nothing secret ever lands in it.
+# Hand the keys out over something private, not a public Slack channel.
 
 set -euo pipefail
 
@@ -19,7 +20,7 @@ ROLE=WorkshopSageMakerExecutionRole
 POLICY=WorkshopSageMakerParticipant
 GROUP=sagemaker-workshop
 COUNT=${COUNT:-5}
-OUT="$(cd "$(dirname "$0")/.." && pwd)/credentials-OUT.txt"
+OUT="${HOME}/whisper-workshop-credentials.txt"
 
 ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 echo "account: $ACCOUNT"
@@ -73,6 +74,7 @@ aws iam attach-group-policy --group-name "$GROUP" --policy-arn "$POLICY_ARN"
 
 # ---------------------------------------------------------------- users + keys
 : > "$OUT"
+chmod 600 "$OUT"
 {
   echo "# Workshop credentials - delete these after the session"
   echo "# execution role: $ROLE_ARN"
@@ -94,6 +96,7 @@ for i in $(seq 1 "$COUNT"); do
   SECRET=$(echo "$KEY" | python3 -c 'import sys,json;print(json.load(sys.stdin)["AccessKey"]["SecretAccessKey"])')
   {
     echo "[$U]  region=$R"
+    echo "  SAGEMAKER_ROLE_ARN=$ROLE_ARN"
     echo "  AWS_ACCESS_KEY_ID=$ID"
     echo "  AWS_SECRET_ACCESS_KEY=$SECRET"
     echo "  AWS_DEFAULT_REGION=$R"
@@ -104,7 +107,7 @@ done
 
 echo
 echo "execution role ARN : $ROLE_ARN"
-echo "credentials written: $OUT   (gitignored - hand out privately)"
+echo "credentials written: $OUT   (0600, outside the repo - hand out privately)"
 echo
 echo "Put this in the README so participants can copy it:"
 echo "  SAGEMAKER_ROLE_ARN=$ROLE_ARN"

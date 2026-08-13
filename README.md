@@ -22,7 +22,7 @@ pip install -r requirements.txt          # ~50 MB, no model weights
 export AWS_ACCESS_KEY_ID=...
 export AWS_SECRET_ACCESS_KEY=...
 export AWS_DEFAULT_REGION=...            # yours, from the table below
-export SAGEMAKER_ROLE_ARN=...            # same for everyone
+export SAGEMAKER_ROLE_ARN=...            # sent with your credentials
 
 # prove it works
 aws sts get-caller-identity
@@ -112,7 +112,8 @@ bash setup/setup-iam.sh     # once, before. Creates role, policy, group, 5 users
 bash setup/teardown.sh      # after. Deletes endpoints in all 5 regions, then the IAM
 ```
 
-`setup-iam.sh` writes `credentials-OUT.txt` (gitignored). Hand those out privately.
+`setup-iam.sh` writes keys to `~/whisper-workshop-credentials.txt` (0600, **outside this
+repo** — this repo is public and never contains secrets). Hand them out privately.
 
 **Test the whole path yourself first.** Deploy, transcribe, clean up. If `deploy.py`
 fails on the HF container version or the payload shape, you want to find that tonight,
