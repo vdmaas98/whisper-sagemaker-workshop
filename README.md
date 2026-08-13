@@ -107,6 +107,14 @@ always-on tax in the deck, and now it's your bill.
 
 ## For the organiser
 
+**First, check you actually have GPU quota.** Service Quotas will report `1` for
+instance types whose enforced limit is `0` — on this account it did that for 49 GPU
+rows across 17 regions. Don't trust the table; probe it:
+
+```bash
+bash setup/check-gpu-quota.sh
+```
+
 ```bash
 bash setup/setup-iam.sh     # once, before. Creates role, policy, group, 5 users + keys
 bash setup/teardown.sh      # after. Deletes endpoints in all 5 regions, then the IAM

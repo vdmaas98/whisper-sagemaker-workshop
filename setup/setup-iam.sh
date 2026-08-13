@@ -63,7 +63,12 @@ else
           \"logs:GetLogEvents\",\"logs:DescribeLogStreams\",\"logs:DescribeLogGroups\"],
          \"Resource\":\"*\"},
         {\"Sid\":\"SeeYourself\",\"Effect\":\"Allow\",\"Action\":[
-          \"iam:GetUser\",\"sts:GetCallerIdentity\"],\"Resource\":\"*\"}
+          \"iam:GetUser\",\"sts:GetCallerIdentity\"],\"Resource\":\"*\"},
+        {\"Sid\":\"SageMakerDefaultBucket\",\"Effect\":\"Allow\",\"Action\":[
+          \"s3:CreateBucket\",\"s3:ListBucket\",\"s3:GetBucketLocation\",\"s3:GetBucketCors\",
+          \"s3:PutBucketCors\",\"s3:GetObject\",\"s3:PutObject\",\"s3:DeleteObject\",
+          \"s3:AbortMultipartUpload\",\"s3:ListBucketMultipartUploads\"],
+         \"Resource\":[\"arn:aws:s3:::sagemaker-*\",\"arn:aws:s3:::sagemaker-*/*\"]}
       ]}" >/dev/null
   echo "created policy $POLICY"
 fi
