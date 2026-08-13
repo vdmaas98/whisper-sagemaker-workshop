@@ -1,0 +1,4 @@
+# SDK v3 removed the v2 API this repo uses (no sagemaker.huggingface, no
+# sagemaker.model). Pin to v2 or deploy.py fails on import.
+sagemaker>=2.220,<3
+boto3>=1.34.0

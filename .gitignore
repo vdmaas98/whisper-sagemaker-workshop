@@ -1,0 +1,6 @@
+credentials-OUT.txt
+.venv/
+__pycache__/
+*.pyc
+audio/*
+!audio/README.md
