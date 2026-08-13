@@ -16,7 +16,7 @@ ROLE=WorkshopSageMakerExecutionRole
 POLICY=WorkshopSageMakerParticipant
 GROUP=sagemaker-workshop
 COUNT=${COUNT:-5}
-REGIONS=(eu-north-1 eu-west-1 eu-central-1 eu-west-2 eu-west-3)
+REGIONS=(eu-central-1 eu-north-1 eu-west-1 eu-west-2 eu-west-3)
 
 # --- fail loudly if we are not authenticated, rather than "deleting" nothing ---
 if ! ACCOUNT=$(aws sts get-caller-identity --query Account --output text 2>&1); then

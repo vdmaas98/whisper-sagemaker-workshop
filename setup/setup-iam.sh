@@ -86,7 +86,9 @@ chmod 600 "$OUT"
   echo
 } >> "$OUT"
 
-REGIONS=(eu-north-1 eu-west-1 eu-central-1 eu-west-2 eu-west-3)
+# Quota is NOT uniform. Probed 13 Aug 2026: eu-central-1 = 6 endpoints,
+# eu-north-1 = 2, everywhere else 0. So everyone goes to Frankfurt.
+REGIONS=(eu-central-1 eu-central-1 eu-central-1 eu-central-1 eu-central-1)
 for i in $(seq 1 "$COUNT"); do
   U="workshop${i}"
   R="${REGIONS[$((i-1))]}"

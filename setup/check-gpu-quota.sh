@@ -20,7 +20,7 @@ if [ -z "$ROLE_ARN" ]; then
   ROLE_ARN="arn:aws:iam::${ACC}:role/WorkshopSageMakerExecutionRole"
 fi
 
-REGIONS="${REGIONS:-eu-north-1 eu-central-1 eu-west-1 us-east-1}"
+REGIONS="${REGIONS:-eu-central-1 eu-north-1 eu-west-1 us-east-1}"
 INSTANCES="${INSTANCES:-ml.g4dn.xlarge ml.g5.xlarge}"
 
 echo "probing real (enforced) quota - not the quota table"

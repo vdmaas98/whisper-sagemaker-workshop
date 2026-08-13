@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 audio/*
 !audio/README.md
+!audio/challenge.wav
+!audio/hello.wav

@@ -1,6 +1,7 @@
-Put a short audio clip here as `sample.mp3` (30-60s is plenty).
+`challenge.wav` - 75s reading, altered. Scores 0% straight from the endpoint.
+`hello.wav`     - 12s from a different chapter, just to prove your endpoint works.
 
-Use something you are happy to send to a cloud endpoint - not client audio.
-A public podcast clip, a Dutch news fragment, or record yourself.
+Source: "The Art of Badminton", LibriVox, public domain.
 
-Audio files are gitignored so the repo stays small.
+The undamaged version of challenge.wav is deliberately NOT in this repo - it is the
+answer. Do not add client audio here either.
