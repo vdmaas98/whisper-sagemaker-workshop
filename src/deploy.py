@@ -20,7 +20,7 @@ import boto3
 import sagemaker
 from sagemaker.huggingface import HuggingFaceModel
 
-MODEL_ID = os.environ.get("HF_MODEL_ID", "openai/whisper-large-v3")
+MODEL_DATA = os.environ.get("MODEL_DATA")  # s3://.../model.tar.gz
 INSTANCE = os.environ.get("INSTANCE_TYPE", "ml.g4dn.xlarge")
 ROLE_ARN = os.environ.get("SAGEMAKER_ROLE_ARN")
 NAME = os.environ.get("ENDPOINT_NAME", "whisper-" + os.environ.get("USER", "you"))
@@ -32,8 +32,12 @@ region = boto3.Session().region_name
 if not region:
     sys.exit("No AWS region configured. Run: aws configure set region <your-region>")
 
+account = boto3.client("sts").get_caller_identity()["Account"]
+if not MODEL_DATA:
+    MODEL_DATA = f"s3://sagemaker-{region}-{account}/whisper/model.tar.gz"
+
 print(f"region    : {region}")
-print(f"model     : {MODEL_ID}")
+print(f"model     : {MODEL_DATA}")
 print(f"instance  : {INSTANCE}  (1x T4, 16 GB)")
 print(f"endpoint  : {NAME}")
 print()
@@ -45,10 +49,15 @@ model = HuggingFaceModel(
     transformers_version="4.49",
     pytorch_version="2.6",
     py_version="py312",
+    model_data=MODEL_DATA,
     env={
-        "HF_MODEL_ID": MODEL_ID,
-        "HF_TASK": "automatic-speech-recognition",
-        # give the container time to pull ~3 GB of weights before health checks fail
+        # our own handler, shipped inside model.tar.gz as code/inference.py
+        "SAGEMAKER_PROGRAM": "inference.py",
+        # The handler MUST live inside model.tar.gz under code/. Pointing
+        # SAGEMAKER_SUBMIT_DIRECTORY at a separate S3 tarball is silently ignored -
+        # the log just says "No inference script implementation was found" and it
+        # falls back to the default handler.
+        "SAGEMAKER_SUBMIT_DIRECTORY": "/opt/ml/model/code",
         "SAGEMAKER_MODEL_SERVER_TIMEOUT": "3600",
         "SAGEMAKER_TS_RESPONSE_TIMEOUT": "3600",
     },

@@ -50,22 +50,29 @@ per-region, and it is the binding constraint on self-hosting far more often than
 
 ## The session
 
-### 1. Deploy — do this first, it takes 5–10 minutes
+### 1. Deploy — do this first, it takes 7–13 minutes
 
 ```bash
 export ENDPOINT_NAME=whisper-$USER
 python src/deploy.py
 ```
 
-Leave it running and come back. While it provisions, the container is pulling ~3 GB
-of weights onto a machine you're now paying for.
+Leave it running and come back. While it provisions, the container pulls a ~10 GB
+image and your 2.7 GB model archive onto a machine you're now paying for.
+
+Measured, `ml.g4dn.xlarge`, whisper-large-v3:
+
+| weights from | time to InService |
+|---|---|
+| Hugging Face (`HF_MODEL_ID`) | **34 min** — it snapshot-downloads the whole 24.7 GB repo |
+| S3 (what this repo does) | **7–13 min** |
 
 ### 2. Transcribe
 
 ```bash
-python src/transcribe.py audio/sample.mp3
-python src/transcribe.py audio/sample.mp3 --words        # word-level timestamps
-python src/transcribe.py audio/sample.mp3 --lang nl      # force Dutch
+python src/transcribe.py audio/sample.wav
+python src/transcribe.py audio/sample.wav --words        # word-level timestamps
+python src/transcribe.py audio/sample.wav --lang nl      # force Dutch
 ```
 
 ### 3. Then actually poke at it
@@ -123,6 +130,23 @@ bash setup/teardown.sh      # after. Deletes endpoints in all 5 regions, then th
 `setup-iam.sh` writes keys to `~/whisper-workshop-credentials.txt` (0600, **outside this
 repo** — this repo is public and never contains secrets). Hand them out privately.
 
-**Test the whole path yourself first.** Deploy, transcribe, clean up. If `deploy.py`
-fails on the HF container version or the payload shape, you want to find that tonight,
-not in front of the room.
+**Tested end to end** on 13 Aug 2026 in eu-north-1: deploy (7 min), plain transcript
+(3.0s), word timestamps (5.8s, 29 chunks), forced Dutch (2.0s), cleanup. Total cost of
+building and testing this: about $5.
+
+### Three things that cost an hour each, so you don't repeat them
+
+**The SDK v2/v3 split.** `pip install sagemaker` gets you 3.x, which deleted
+`sagemaker.huggingface` and `sagemaker.model`. Hence the `<3` pin in requirements.txt.
+
+**The stock ASR handler takes no parameters.** Send it JSON and it passes your
+`inputs` string to `open()` as a filename. Word timestamps and language forcing are
+unreachable without a custom handler — that's why `src/code/inference.py` exists. Two
+traps in writing one: the pipeline wants a numpy array (use `ffmpeg_read`, not raw
+bytes), and `transform_fn` must return the body *only* — returning `(body, accept)`
+gets the tuple serialised and you receive `["{...}", "application/json"]`.
+
+**The handler must live inside `model.tar.gz` under `code/`.** Pointing
+`SAGEMAKER_SUBMIT_DIRECTORY` at a separate S3 tarball is silently ignored — the log
+says `No inference script implementation was found` and it falls back to the default.
+So iterating on the handler means re-uploading the whole archive.
