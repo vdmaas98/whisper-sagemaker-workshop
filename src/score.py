@@ -44,11 +44,11 @@ def main():
     if pct > 0.98:
         print("  Solved. Put your name on the board.")
     elif pct > 0.80:
-        print("  Close. One layer is right, the other is slightly off.")
+        print("  Very close.")
     elif pct > 0.30:
-        print("  Something is working. Keep going.")
+        print("  Something is working.")
     else:
-        print("  Nothing is landing yet. Listen to the file.")
+        print("  Nothing yet.")
 
 
 if __name__ == "__main__":

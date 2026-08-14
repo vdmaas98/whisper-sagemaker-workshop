@@ -1,4 +1,4 @@
-`challenge.wav` - 75s reading, altered. Scores 0% straight from the endpoint.
+`challenge.wav` - 75s reading, altered. Scores about 5% straight from the endpoint.
 `hello.wav`     - 12s from a different chapter, just to prove your endpoint works.
 
 Source: "The Art of Badminton", LibriVox, public domain.

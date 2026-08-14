@@ -88,27 +88,14 @@ python src/transcribe.py audio/challenge.wav > attempt.txt
 python src/score.py attempt.txt
 ```
 
-Work out what was done and undo it. Score is word-level match against the undamaged
-reference, which is embedded in `score.py` so scoring works offline. It is the answer key,
-not the answer — it tells you nothing about what was done to the audio.
+**Work out what was done to it, undo it, and get your score as high as you can.**
 
-No tools are provided. Working out what was done, and writing the thing that undoes it,
-is the entire exercise. `ffmpeg`, `sox`, Audacity, numpy, or twenty lines of Python —
-whatever you like.
+Something was done to `clean.wav` to produce `challenge.wav`. That is all you get. Use
+whatever you like — ffmpeg, sox, Audacity, numpy, your own code.
 
-Worth knowing:
-
-* **Listen to the file first.** Thirty seconds of actually hearing it beats an hour of
-  guessing. It is plainly speech and you should be able to tell what is wrong with it.
-* **Nothing was added and nothing was removed.** Every sample of the original is still
-  in there, at the same amplitude, in a 16 kHz mono WAV. So this is not noise, and no
-  amount of denoising, filtering or EQ will help you.
-* Whatever was done is exactly reversible, and more than one thing was done.
-* Near-zero is the normal state until you are close. Partial credit appears late, so
-  sweep systematically rather than hill-climbing from a bad score.
-* `--words` and `--lang` exist and may or may not help. Measure, don't assume.
-
-**Ties break on who got there first**, so tell me your score as soon as you have it.
+Scoring is a word-level match against the undamaged reference, which is embedded in
+`score.py` so it works offline. Highest score wins; **ties break on who got there first**,
+so tell me your score as soon as you have it.
 
 ### 4. Clean up — not optional
 
@@ -173,13 +160,6 @@ array (use `ffmpeg_read`), and `transform_fn` must return the body **only** — 
 **The handler must live inside `model.tar.gz` under `code/`.** Pointing
 `SAGEMAKER_SUBMIT_DIRECTORY` at a separate S3 tarball is silently ignored — the log says
 `No inference script implementation was found` and it falls back to the default handler.
-
-**Whisper large-v3 is extremely robust to ordinary damage**, which is why the challenge
-uses invertible structural damage rather than noise. Measured on a 30s clip: 1.37× speed
-with pitch shift, telephone band-limiting, pink noise and gain loss *stacked together*
-still scored 97.6% — and every attempt to clean it up made things worse. Pink noise
-degrades gracefully to about 0.30 amplitude then collapses to 0% at 0.35. Robust until a
-cliff, with no usable middle.
 
 ---
 
