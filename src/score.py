@@ -7,10 +7,6 @@ Score your transcript against the reference.
 Word-level scoring: lowercased, punctuation stripped, matched against the
 reference with difflib. Your score is the fraction of reference words recovered
 in order. 100% means you have fully undone what was done to challenge.wav.
-
-Yes, the reference is embedded below, and yes you could decode it. That is not
-the game and you will not learn anything from it. The game is working out what
-was done to the audio and undoing it.
 """
 
 import base64

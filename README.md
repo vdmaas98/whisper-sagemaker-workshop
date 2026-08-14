@@ -92,23 +92,18 @@ Work out what was done and undo it. Score is word-level match against the undama
 reference, which is embedded in `score.py` so scoring works offline. It is the answer key,
 not the answer — it tells you nothing about what was done to the audio.
 
-Two tools are provided. How many times you need each, in what order, and with what
-parameters is the whole puzzle:
-
-```bash
-python src/tools.py flip   in.wav out.wav         # invert the spectrum
-python src/tools.py segrev in.wav out.wav <ms>    # reverse every N ms block
-```
-
-Both are their own inverse. Ignore them and use ffmpeg, sox or Audacity if you prefer.
+No tools are provided. Working out what was done, and writing the thing that undoes it,
+is the entire exercise. `ffmpeg`, `sox`, Audacity, numpy, or twenty lines of Python —
+whatever you like.
 
 Worth knowing:
 
 * **Listen to the file first.** Thirty seconds of actually hearing it beats an hour of
   guessing. It is plainly speech and you should be able to tell what is wrong with it.
-* Nothing was added to this audio and nothing was removed. Every sample of the original
-  is still in there, at the same amplitude.
-* Do not assume one operation is applied at most once. Do not assume both tools are used.
+* **Nothing was added and nothing was removed.** Every sample of the original is still
+  in there, at the same amplitude, in a 16 kHz mono WAV. So this is not noise, and no
+  amount of denoising, filtering or EQ will help you.
+* Whatever was done is exactly reversible, and more than one thing was done.
 * Near-zero is the normal state until you are close. Partial credit appears late, so
   sweep systematically rather than hill-climbing from a bad score.
 * `--words` and `--lang` exist and may or may not help. Measure, don't assume.
