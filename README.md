@@ -93,9 +93,8 @@ python src/score.py attempt.txt
 Something was done to `clean.wav` to produce `challenge.wav`. That is all you get. Use
 whatever you like — ffmpeg, sox, Audacity, numpy, your own code.
 
-Scoring is a word-level match against the undamaged reference, which is embedded in
-`score.py` so it works offline. Highest score wins; **ties break on who got there first**,
-so tell me your score as soon as you have it.
+Scoring is a word-level match against the original transcript. Highest score wins;
+**ties break on who got there first**, so tell me your score as soon as you have it.
 
 ### 4. Clean up — not optional
 
