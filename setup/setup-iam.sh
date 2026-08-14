@@ -19,8 +19,22 @@ set -euo pipefail
 ROLE=WorkshopSageMakerExecutionRole
 POLICY=WorkshopSageMakerParticipant
 GROUP=sagemaker-workshop
-COUNT=${COUNT:-5}
+COUNT=${COUNT:-6}          # eu-central-1 quota is 6 endpoints, so 6 is the ceiling
+REGION=${REGION:-eu-central-1}
 OUT="${HOME}/whisper-workshop-credentials.txt"
+
+# A secret access key can be read exactly once, at creation. If this script
+# truncates OUT and then skips users that already exist, their keys are gone
+# for good - you cannot re-read them, only delete and reissue. So refuse to
+# clobber an existing file.
+if [ -s "$OUT" ] && [ "${FORCE:-0}" != "1" ]; then
+  echo "$OUT already exists and is not empty."
+  echo "Re-running would wipe it while skipping users that already exist,"
+  echo "and their secret keys cannot be recovered."
+  echo "To add more people, raise COUNT and run with FORCE=1, or create the"
+  echo "user by hand. To start over, run setup/teardown.sh first."
+  exit 1
+fi
 
 ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 echo "account: $ACCOUNT"
@@ -87,11 +101,12 @@ chmod 600 "$OUT"
 } >> "$OUT"
 
 # Quota is NOT uniform. Probed 13 Aug 2026: eu-central-1 = 6 endpoints,
-# eu-north-1 = 2, everywhere else 0. So everyone goes to Frankfurt.
-REGIONS=(eu-central-1 eu-central-1 eu-central-1 eu-central-1 eu-central-1)
+# eu-north-1 = 2, everywhere else 0. So everyone goes to Frankfurt, and COUNT
+# must not exceed the endpoint quota there - a participant over the limit gets
+# ResourceLimitExceeded, which reads like a broken setup rather than a full one.
 for i in $(seq 1 "$COUNT"); do
   U="workshop${i}"
-  R="${REGIONS[$((i-1))]}"
+  R="$REGION"
   if aws iam get-user --user-name "$U" >/dev/null 2>&1; then
     echo "user $U already exists, skipping key creation"
     continue

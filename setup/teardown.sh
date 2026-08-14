@@ -15,7 +15,7 @@ set -uo pipefail
 ROLE=WorkshopSageMakerExecutionRole
 POLICY=WorkshopSageMakerParticipant
 GROUP=sagemaker-workshop
-COUNT=${COUNT:-5}
+COUNT=${COUNT:-6}
 REGIONS=(eu-central-1 eu-north-1 eu-west-1 eu-west-2 eu-west-3)
 
 # --- fail loudly if we are not authenticated, rather than "deleting" nothing ---
