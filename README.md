@@ -78,17 +78,15 @@ python src/score.py attempt.txt
 ```
 
 Work out what was done and undo it. Score is word-level match against the undamaged
-reference. **Highest score at the end wins.**
+reference, which is embedded in `score.py` so scoring works offline. It is the answer key,
+not the answer — it tells you nothing about what was done to the audio.
 
-The reference is embedded in `score.py` so scoring works offline, and `setup/` describes
-how the file was made. Both are trivially readable. Reading them is not the exercise and
-there are six of us in the room.
-
-Two tools are provided. Whether you need one, both or neither is for you to work out:
+Two tools are provided. How many times you need each, in what order, and with what
+parameters is the whole puzzle:
 
 ```bash
-python src/tools.py flip   in.wav out.wav        # invert the spectrum
-python src/tools.py segrev in.wav out.wav 250    # reverse every N ms block
+python src/tools.py flip   in.wav out.wav         # invert the spectrum
+python src/tools.py segrev in.wav out.wav <ms>    # reverse every N ms block
 ```
 
 Both are their own inverse. Ignore them and use ffmpeg, sox or Audacity if you prefer.
@@ -96,10 +94,14 @@ Both are their own inverse. Ignore them and use ffmpeg, sox or Audacity if you p
 Worth knowing:
 
 * **Listen to the file first.** Thirty seconds with headphones beats an hour of guessing.
-* Partial credit is real — a near-miss on a parameter scores well above zero, so sweep it.
-* The scoring landscape is not smooth. There is at least one decoy that scores well
-  without being right.
+* Nothing was added to this audio and nothing was removed. Every sample of the original
+  is still in there.
+* Do not assume one operation is applied at most once.
+* Near-zero is the normal state until you are close. Partial credit appears late, so
+  sweep systematically rather than hill-climbing from a bad score.
 * `--words` and `--lang` exist and may or may not help. Measure, don't assume.
+
+**Ties break on who got there first**, so tell me your score as soon as you have it.
 
 ### 4. Clean up — not optional
 
@@ -131,6 +133,13 @@ bash setup/teardown.sh          # after. deletes endpoints everywhere, then the 
 
 `setup-iam.sh` writes keys to `~/whisper-workshop-credentials.txt` (mode 0600,
 **outside this repo** — this repo is public). Hand them out privately.
+
+The challenge recipe lives in `~/whisper-workshop-solution.md`, also outside this repo.
+Keep the scoreboard on your own screen:
+
+```bash
+python3 -m http.server 8000 -d scoreboard   # then open http://localhost:8000
+```
 
 ---
 

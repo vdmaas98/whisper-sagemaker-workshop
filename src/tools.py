@@ -1,9 +1,10 @@
 """
 Audio tools for the challenge. These are the only two operations you need -
-figuring out whether and how to apply them is the whole point.
+figuring out how many times to apply each, in what order, and with what
+parameters is the whole point.
 
-    python src/tools.py flip    in.wav out.wav        # invert the spectrum
-    python src/tools.py segrev  in.wav out.wav 250    # reverse every N ms block
+    python src/tools.py flip    in.wav out.wav         # invert the spectrum
+    python src/tools.py segrev  in.wav out.wav <ms>    # reverse every N ms block
 
 Both are their own inverse when applied with the same parameter.
 """
