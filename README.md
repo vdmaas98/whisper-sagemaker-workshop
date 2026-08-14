@@ -78,7 +78,11 @@ python src/score.py attempt.txt
 ```
 
 Work out what was done and undo it. Score is word-level match against the undamaged
-reference, which is not in this repo. **Highest score at the end wins.**
+reference. **Highest score at the end wins.**
+
+The reference is embedded in `score.py` so scoring works offline, and `setup/` describes
+how the file was made. Both are trivially readable. Reading them is not the exercise and
+there are six of us in the room.
 
 Two tools are provided. Whether you need one, both or neither is for you to work out:
 
