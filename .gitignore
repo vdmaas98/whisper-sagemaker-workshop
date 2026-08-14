@@ -17,3 +17,5 @@ audio/*
 !audio/README.md
 !audio/challenge.wav
 !audio/hello.wav
+
+.DS_Store
