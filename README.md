@@ -138,7 +138,7 @@ The challenge recipe lives in `~/whisper-workshop-solution.md`, also outside thi
 Keep the scoreboard on your own screen:
 
 ```bash
-python3 -m http.server 8000 -d scoreboard   # then open http://localhost:8000
+python3 -m http.server 3001 -d scoreboard   # then open http://localhost:3001
 ```
 
 ---
