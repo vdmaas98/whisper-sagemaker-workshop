@@ -70,7 +70,7 @@ python src/transcribe.py audio/hello.wav --words  # word-level timestamps
 ### 3. The challenge
 
 `audio/challenge.wav` is a 75-second reading with something done to it. Sent to your
-endpoint as-is it scores **0%**.
+endpoint as-is it scores about **5%**.
 
 ```bash
 python src/transcribe.py audio/challenge.wav > attempt.txt
@@ -93,10 +93,11 @@ Both are their own inverse. Ignore them and use ffmpeg, sox or Audacity if you p
 
 Worth knowing:
 
-* **Listen to the file first.** Thirty seconds with headphones beats an hour of guessing.
+* **Listen to the file first.** Thirty seconds of actually hearing it beats an hour of
+  guessing. It is plainly speech and you should be able to tell what is wrong with it.
 * Nothing was added to this audio and nothing was removed. Every sample of the original
-  is still in there.
-* Do not assume one operation is applied at most once.
+  is still in there, at the same amplitude.
+* Do not assume one operation is applied at most once. Do not assume both tools are used.
 * Near-zero is the normal state until you are close. Partial credit appears late, so
   sweep systematically rather than hill-climbing from a bad score.
 * `--words` and `--lang` exist and may or may not help. Measure, don't assume.
