@@ -1,4 +1,15 @@
-credentials-OUT.txt
+# your AWS keys. NEVER commit these - this repo is public and you will be
+# pushing branches to it.
+.env
+.env.*
+credentials*.txt
+*.pem
+
+# working files from the challenge
+attempt*.txt
+out*.txt
+*.attempt.wav
+
 .venv/
 __pycache__/
 *.pyc

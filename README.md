@@ -8,7 +8,7 @@ yours to control — and the scoreboard measures how well you control it.
 
 ---
 
-## Before you start — the evening before, 2 minutes
+## Do this BEFORE the session — 2 minutes, and it will not work if you skip it
 
 ```bash
 git clone https://github.com/vdmaas98/whisper-sagemaker-workshop
@@ -17,24 +17,35 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt          # ~50 MB, no model weights
 ```
 
-Then paste the four lines you were sent privately:
+I will send you a block of four `export` lines privately. Put them in a file called
+`.env` in this directory — **not** straight into your terminal, because those vanish the
+moment you close the tab.
 
 ```bash
-export AWS_ACCESS_KEY_ID=AKIA...
-export AWS_SECRET_ACCESS_KEY=...
-export AWS_DEFAULT_REGION=eu-central-1
-export SAGEMAKER_ROLE_ARN=arn:aws:iam::<account>:role/WorkshopSageMakerExecutionRole
+nano .env          # paste the four lines I sent you, then save
+chmod 600 .env
 ```
 
-Keep them in your shell or a local `.env` you source — **never in this repo.**
+`.env` is in `.gitignore`, so it will not be committed. That matters: this repo is public
+and you will be pushing a branch to it.
+
+Load it into your shell. **You must do this in every new terminal tab:**
+
+```bash
+source .env
+```
 
 Prove it works:
 
 ```bash
-aws sts get-caller-identity        # should print your workshop user
+aws sts get-caller-identity        # should print your workshop user, not root
+echo $SAGEMAKER_ROLE_ARN           # must not be empty
 ```
 
-**If that errors, message me the night before, not at 09:00.**
+Both have to be right. `deploy.py` exits immediately if `SAGEMAKER_ROLE_ARN` is unset,
+and that is the single most common way to lose ten minutes.
+
+**If either errors, message me before the session starts, not during it.**
 
 Everyone is in `eu-central-1` — that is where the GPU quota is. `eu-north-1` has room
 for two endpoints and everywhere else has none.
